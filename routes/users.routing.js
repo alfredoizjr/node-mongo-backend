@@ -1,20 +1,24 @@
 // REQUIERES //
 var express = require('express');
-var Users = require('../models/user.model');
+var User = require('../models/user.model');
 // INIT VAR //
 var app = express();
 
 
+//==============================
+// GET LIST OF USERS
+//=============================
+
 app.get('/', (req, res) => {
 
 
-    Users.find({},
+    User.find({},
         'name last email img role')
         .exec(
             (err, users) => {
                 if (err) {
                     return res.status(500).json({
-                        message: 'error on user register',
+                        message: 'error  for get users',
                         status: '500',
                         err
                     });
@@ -27,6 +31,43 @@ app.get('/', (req, res) => {
 
                 });
             });
+
+});
+
+
+//==============================
+// CREATE A USER
+//==============================
+
+app.post('/', (req, res) => {
+
+var body = req.body;
+var user = new User({
+
+    name: body.name,
+    last: body.last,
+    email: body.email,
+    password: body.password,
+    img: body.img,
+    role: body.role
+});
+
+user.save((err, newUser) => {
+    if (err) {
+        return res.status(400).json({
+            message: 'error on user register',
+            status: '400',
+            err
+        });
+    }
+
+    res.status(201).json({
+        message: 'User create',
+        status: '201',
+        newUser
+    
+    });
+});
 
 });
 
