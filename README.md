@@ -1,4 +1,4 @@
-# Simple Chat Theme
+# Server node and mogoDB
 
 Small server in node js connected  with mogoDB using mongoos and express
 
