@@ -1,21 +1,21 @@
 // REQUIERES //
 var express = require('express');
-var User = require('../models/user.model');
+var Project = require('../models/project.model');
 var middleware = require('../middleware/auth.midldleware');
-var bcrypt = require('bcryptjs');
 // INIT VAR //
 var app = express();
 
 
 //==============================
-// GET LIST OF USERS
+// GET LIST OF PROJECTS
 //=============================
 
 app.get('/', (req, res) => {
 
 
-    User.find({},
-        'name last email img role')
+    Project.find({})
+        .populate('user','name last email')
+        .populate('client','name last email phone')
         .exec(
             (err, users) => {
                 if (err) {
@@ -38,35 +38,32 @@ app.get('/', (req, res) => {
 
 
 //==============================
-// CREATE A USER
+// CREATE A PROJECT
 //==============================
 
 app.post('/', middleware.verifyToken,(req, res) => {
 
     var body = req.body;
-    var user = new User({
+    var project = new Project({
 
         name: body.name,
-        last: body.last,
-        email: body.email,
-        password: bcrypt.hashSync(body.password,10),
-        img: body.img,
-        role: body.role
+        user: req.user._id,
+        client: body._id
     });
 
-    user.save((err, newUser) => {
+    project.save((err, newproject) => {
         if (err) {
             return res.status(400).json({
-                message: 'error on user register',
+                message: 'error on project register',
                 status: '400',
                 err
             });
         }
 
         res.status(201).json({
-            message: 'User create',
+            message: 'Project create',
             status: '201',
-            newUser
+            newproject
 
         });
     });
@@ -74,24 +71,24 @@ app.post('/', middleware.verifyToken,(req, res) => {
 
 
 //==============================
-// EDIT USER
+// EDIT PROJECT
 //==============================
 
 app.put('/:id',middleware.verifyToken, (req, res) => {
 
-    User.findOneAndUpdate({ '_id': req.params.id }, req.body, { new: true }, (err, updateUser) => {
+    Project.findOneAndUpdate({ '_id': req.params.id }, req.body, { new: true }, (err, updateProject) => {
         if (err) {
             return res.status(400).json({
-                message: 'error on user update',
+                message: 'error on project update',
                 status: '400',
                 err
             });
         }
 
         res.status(201).json({
-            message: 'User Edited',
+            message: 'Project edited susses',
             status: '201',
-            updateUser
+            updateProject
 
         });
     });
@@ -100,39 +97,38 @@ app.put('/:id',middleware.verifyToken, (req, res) => {
 
 
 //==============================
-// DELETE USER
+// DELETE PROJECT
 //==============================
 
 app.delete('/:id',middleware.verifyToken, (req, res) => {
 
-    User.findByIdAndRemove(req.params.id, (err, deleteUser) => {
+    Project.findByIdAndRemove(req.params.id, (err, deleteProject) => {
         if (err) {
             return res.status(400).json({
-                message: 'error on user delete',
+                message: 'error on project delete',
                 status: '400',
                 err
             });
         }
 
 
-        if (!deleteUser) {
+        if (!deleteProject) {
             return res.status(404).json({
                 message: 'User is not found',
                 status: '404',
-                err: { message: 'The user id is not found on the registers' }
+                err: { message: 'The project id is not found on the registers' }
             });
         }
 
         res.status(200).json({
-            message: 'User Delete',
+            message: 'Project Delete susses',
             status: '200',
-            deleteUser: deleteUser._id
+            deleteProject: deleteProject._id
 
         });
     });
 
 });
-
 
 
 

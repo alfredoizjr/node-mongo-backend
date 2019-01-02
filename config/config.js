@@ -1,0 +1,1 @@
+module.exports.KEY = 'thesecret-key000';

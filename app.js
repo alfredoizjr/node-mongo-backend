@@ -22,11 +22,21 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitaldb',{ useNewUrlPa
 
 // IMPORT ROUTES
 var appRoute = require('./routes/app.routing');
+var loginRouter = require('./routes/login.routing');
 var usersRouter = require('./routes/users.routing');
+var clientRouter = require('./routes/client.routing');
+var projectRouter = require('./routes/project.routing');
+var uploadtRouter = require('./routes/upload.routing');
+var imgRoute = require('./routes/imagen.routing');
 
 
 // RUTES
+app.use('/image',imgRoute);
+app.use('/login',loginRouter);
+app.use('/client',clientRouter);
 app.use('/user',usersRouter);
+app.use('/project',projectRouter);
+app.use('/upload',uploadtRouter);
 app.use('/',appRoute);
 
 
