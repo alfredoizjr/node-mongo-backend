@@ -66,12 +66,12 @@ app.post('/', (req, res) => {
 ============================================*/
 
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client(CLIENT_ID);
 const CLIENT_ID = require('../config/config').CLIENT_ID;
+const client = new OAuth2Client(CLIENT_ID);
 
 
-async function verify(token) {
-    const ticket = await client.verifyIdToken({
+ function verify(token) {
+    const ticket = client.verifyIdToken({
         idToken: token,
         audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
         // Or, if multiple clients access the backend:
@@ -91,11 +91,13 @@ async function verify(token) {
     }
 }
 
-app.post('/google', async (err, res) => {
+
+
+app.post('/google', (err, res) => {
 
     var token = req.body.token;
 
-    var googleUser = await verify(token).catch(err => {
+    var googleUser = verify(token).catch(err => {
 
 
         return res.status(403).json({
@@ -162,11 +164,6 @@ app.post('/google', async (err, res) => {
 
     });
 
-    // res.status(200).json({
-    //     message: 'Sussess login',
-    //     status: '200',
-    //     googleUser: googleUser
-    // })
 
 });
 
