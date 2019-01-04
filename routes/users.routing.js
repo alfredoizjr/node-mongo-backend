@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 // CREATE A USER
 //==============================
 
-app.post('/', middleware.verifyToken,(req, res) => {
+app.post('/',(req, res) => {
 
     var body = req.body;
     var user = new User({

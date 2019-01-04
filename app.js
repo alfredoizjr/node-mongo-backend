@@ -7,6 +7,15 @@ var bodyParser = require('body-parser')
 //== INIT VAR ==//
 var app = express();
 
+//== CORS ==//
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow","POST, GET, PUT, DELETE, OPTIONS");
+    next();
+  });
+
 // === BODY PARSE ==//
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.urlencoded({ extended: false }));
